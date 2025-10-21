@@ -175,13 +175,7 @@ const Login = () => {
             </button>
           </div>
 
-          <div className="text-center">
-            <div className="text-sm text-gray-600">
-              Default credentials: <br />
-              <span className="font-medium">Username:</span> superadmin <br />
-              <span className="font-medium">Password:</span> admin123
-            </div>
-          </div>
+        
         </form>
       </div>
     </div>

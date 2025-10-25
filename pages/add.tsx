@@ -18,7 +18,7 @@ const AddProduct = () => {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [messageType, setMessageType] = useState<'success' | 'error' | ''>('')
-  
+
   // Add New Product Modal State
   const [showAddProductModal, setShowAddProductModal] = useState(false)
   const [newProductName, setNewProductName] = useState('')
@@ -108,7 +108,7 @@ const AddProduct = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!formData.product_name || !formData.quantity || !formData.unit_price || !formData.date) {
       setMessage('Please fill in all fields')
       setMessageType('error')
@@ -142,7 +142,7 @@ const AddProduct = () => {
       })
 
       const data = await response.json()
-      
+
       if (data.success) {
         setMessage(`${data.message}. Available stock: ${data.product.available_stock}`)
         setMessageType('success')
@@ -171,7 +171,7 @@ const AddProduct = () => {
     <ProtectedRoute allowedRoles={['superadmin', 'admin', 'editor']}>
       <div className="min-h-screen bg-gray-50">
         <Navbar />
-        
+
         {/* Toast Notification */}
         <AnimatePresence>
           {toast && (
@@ -181,9 +181,8 @@ const AddProduct = () => {
               exit={{ opacity: 0, y: -50 }}
               className="fixed top-20 right-4 z-50"
             >
-              <div className={`px-6 py-4 rounded-lg shadow-lg ${
-                toast.type === 'success' ? 'bg-green-500' : 'bg-red-500'
-              } text-white`}>
+              <div className={`px-6 py-4 rounded-lg shadow-lg ${toast.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+                } text-white`}>
                 {toast.message}
               </div>
             </motion.div>
@@ -193,7 +192,7 @@ const AddProduct = () => {
         <div className="max-w-2xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
           <div className="bg-white shadow rounded-lg p-6">
             <h1 className="text-2xl font-bold text-gray-900 mb-6">Add Product Stock</h1>
-            
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <div className="flex justify-between items-center mb-2">
@@ -283,11 +282,10 @@ const AddProduct = () => {
               </div>
 
               {message && (
-                <div className={`p-4 rounded-md ${
-                  messageType === 'success' 
-                    ? 'bg-green-50 text-green-800 border border-green-200' 
+                <div className={`p-4 rounded-md ${messageType === 'success'
+                    ? 'bg-green-50 text-green-800 border border-green-200'
                     : 'bg-red-50 text-red-800 border border-red-200'
-                }`}>
+                  }`}>
                   {message}
                 </div>
               )}
@@ -295,11 +293,10 @@ const AddProduct = () => {
               <button
                 type="submit"
                 disabled={loading || products.length === 0}
-                className={`w-full py-2 px-4 rounded-md font-medium ${
-                  loading || products.length === 0
+                className={`w-full py-2 px-4 rounded-md font-medium ${loading || products.length === 0
                     ? 'bg-gray-400 cursor-not-allowed'
                     : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
-                } text-white transition duration-150 ease-in-out`}
+                  } text-white transition duration-150 ease-in-out`}
               >
                 {loading ? 'Adding Stock...' : 'Add Stock'}
               </button>
@@ -322,7 +319,7 @@ const AddProduct = () => {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 className="bg-white rounded-xl shadow-2xl max-w-md w-full"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
               >
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 flex justify-between items-center rounded-t-xl">
                   <h2 className="text-xl font-bold">Add New Product</h2>

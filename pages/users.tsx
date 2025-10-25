@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Users, Plus, Trash2, UserPlus } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import ProtectedRoute from '../components/ProtectedRoute';
-import { apiCall, getUser, canCreateUsers, canManageUsers, canAssignRoles } from '../utils/auth';
+import { apiCall, getUser, canCreateUsers, isSuperAdmin } from '../utils/auth';
 
 interface User {
   id: number;
@@ -32,8 +32,7 @@ const UserManagement = () => {
 
   const currentUser = getUser();
   const canCreate = canCreateUsers();
-  const canManage = canManageUsers();
-  const canAssign = canAssignRoles();
+  const isSuperAdminUser = isSuperAdmin();
 
   useEffect(() => {
     fetchUsers();
@@ -152,9 +151,9 @@ const UserManagement = () => {
                 <h1 className="text-2xl font-bold text-gray-800">User Management</h1>
                 <div className="ml-4 flex items-center">
                   <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                    canManage ? 'bg-red-100 text-red-800' : 'bg-orange-100 text-orange-800'
+                    isSuperAdminUser ? 'bg-red-100 text-red-800' : 'bg-orange-100 text-orange-800'
                   }`}>
-                    {canManage ? 'Super Admin' : 'Admin'} Access
+                    {isSuperAdminUser ? 'Super Admin' : 'Admin'} Access
                   </span>
                 </div>
               </div>
@@ -224,9 +223,14 @@ const UserManagement = () => {
                       >
                         <option value="viewer">Viewer</option>
                         <option value="editor">Editor</option>
-                        {canAssign && <option value="admin">Admin</option>}
-                        {canManage && <option value="superadmin">Super Admin</option>}
+                        {isSuperAdminUser && <option value="admin">Admin</option>}
+                        {isSuperAdminUser && <option value="superadmin">Super Admin</option>}
                       </select>
+                      {!isSuperAdminUser && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          As an Admin, you can only create Editor or Viewer users
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="flex justify-end space-x-2">
@@ -296,8 +300,8 @@ const UserManagement = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           {user.id !== currentUser?.id && (
                             <>
-                              {/* Only allow deletion based on permissions */}
-                              {(canManage || (canAssign && user.role !== 'superadmin')) && (
+                              {/* Super Admin can delete anyone, Admin can only delete Viewer/Editor */}
+                              {(isSuperAdminUser || (canCreate && user.role !== 'superadmin' && user.role !== 'admin')) && (
                                 <button
                                   onClick={() => handleDeleteUser(user.id, user.username)}
                                   className="text-red-600 hover:text-red-900 hover:bg-red-50 p-2 rounded-md"
@@ -306,8 +310,8 @@ const UserManagement = () => {
                                   <Trash2 className="w-4 h-4" />
                                 </button>
                               )}
-                              {/* Show restricted message for users that can't be deleted */}
-                              {!canManage && user.role === 'superadmin' && (
+                              {/* Show restricted message for users that can't be deleted by Admin */}
+                              {!isSuperAdminUser && (user.role === 'superadmin' || user.role === 'admin') && (
                                 <span className="text-gray-400 text-xs px-2 py-1 bg-gray-100 rounded">
                                   Protected
                                 </span>

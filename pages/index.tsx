@@ -103,11 +103,12 @@ const Dashboard = () => {
   }
 
   const displayProducts = filteredData ? filteredData.products : products
-  const totalAddedQty = displayProducts.reduce((sum, p) => sum + (p.total_added_qty || 0), 0)
-  const totalAddedAmount = displayProducts.reduce((sum, p) => sum + (Number(p.total_added_amount) || 0), 0)
-  const totalSoldQty = displayProducts.reduce((sum, p) => sum + (p.total_sold_qty || 0), 0)
-  const totalSoldAmount = displayProducts.reduce((sum, p) => sum + (Number(p.total_sold_amount) || 0), 0)
-  const totalStock = displayProducts.reduce((sum, p) => sum + (p.available_stock || 0), 0)
+  const safeProducts = displayProducts || []
+  const totalAddedQty = safeProducts.reduce((sum, p) => sum + (p.total_added_qty || 0), 0)
+  const totalAddedAmount = safeProducts.reduce((sum, p) => sum + (Number(p.total_added_amount) || 0), 0)
+  const totalSoldQty = safeProducts.reduce((sum, p) => sum + (p.total_sold_qty || 0), 0)
+  const totalSoldAmount = safeProducts.reduce((sum, p) => sum + (Number(p.total_sold_amount) || 0), 0)
+  const totalStock = safeProducts.reduce((sum, p) => sum + (p.available_stock || 0), 0)
 
   return (
     <ProtectedRoute>
@@ -139,7 +140,7 @@ const Dashboard = () => {
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">Total Products</dt>
-                      <dd className="text-lg font-medium text-gray-900">{displayProducts.length}</dd>
+                      <dd className="text-lg font-medium text-gray-900">{safeProducts.length}</dd>
                     </dl>
                   </div>
                 </div>
@@ -323,7 +324,7 @@ const Dashboard = () => {
             {/* Charts */}
             <div className="mb-8">
               <h2 className="text-xl font-bold text-gray-900 mb-4">Charts & Analytics</h2>
-              <SummaryChart products={displayProducts} />
+              <SummaryChart products={safeProducts} />
             </div>
 
             {/* Product Table */}
@@ -331,7 +332,7 @@ const Dashboard = () => {
               <h2 className="text-xl font-bold text-gray-900 mb-4">
                 Enhanced Product Summary {filteredData && '(Filtered)'}
               </h2>
-              <ProductTable products={displayProducts} enhanced={true} />
+              <ProductTable products={safeProducts} enhanced={true} />
             </div>
           </>
         )}

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { LogOut, User, Activity, Users } from 'lucide-react'
+import { LogOut, User, Activity, Users, Package } from 'lucide-react'
 import { getUser, logout, canAddEdit, canManageUsers, canCreateUsers, canViewOwnActivities } from '../utils/auth'
 
 const Navbar = () => {
@@ -72,14 +72,15 @@ const Navbar = () => {
             )}
             {canAddEdit() && (
               <Link
-                href="/sell"
-                className={`px-3 py-2 rounded-md text-sm font-medium ${
-                  isActive('/sell') 
+                href="/orders"
+                className={`flex items-center px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive('/orders') 
                     ? 'bg-blue-700' 
                     : 'hover:bg-blue-500'
                 }`}
               >
-                Sell Product
+                <Package className="w-4 h-4 mr-1" />
+                Orders
               </Link>
             )}
             <Link
@@ -90,27 +91,7 @@ const Navbar = () => {
                   : 'hover:bg-blue-500'
               }`}
             >
-              Transaction History
-            </Link>
-            <Link
-              href="/liquid-demo"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
-                isActive('/liquid-demo') 
-                  ? 'bg-blue-700' 
-                  : 'hover:bg-blue-500'
-              }`}
-            >
-              🧪 Liquid Charts
-            </Link>
-            <Link
-              href="/logo-showcase"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
-                isActive('/logo-showcase') 
-                  ? 'bg-blue-700' 
-                  : 'hover:bg-blue-500'
-              }`}
-            >
-              🎨 Logo Demo
+              Transactions
             </Link>
             {canViewOwnActivities() && (
               <button
